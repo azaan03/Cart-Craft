@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.views import View
 from .models import Costumer,Product,Order,Cart
+from .forms import CustomerRegistrationForm
+from django.contrib import messages
 
-
+#Product
 class ProductView(View):
     def get(self, request):
         mobiles = Product.objects.filter(category='M')
@@ -13,6 +15,7 @@ class ProductView(View):
         }
         return render(request, 'app/home.html', context)
 
+#Product
 class Product_detail(View):
     def get(self,request,pk):
         product=Product.objects.get(pk=pk) 
@@ -65,8 +68,25 @@ def laptop(request, data=None):
 def login(request):
  return render(request, 'app/login.html')
 
-def customerregistration(request):
- return render(request, 'app/customerregistration.html')
+#Costumer Registration
+class CustomerRegistrationView(View):
+    def get(self, request):
+        form = CustomerRegistrationForm()
+        return render(request, 'app/customerregistration.html', {'form': form})
+    def post(self, request):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            # Check if email already exists
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'Email already exists.')
+                return render(request, 'app/customerregistration.html', {'form': form})
+            form.save()
+            messages.success(request, 'Registration successful!')
+        return render(request, 'app/customerregistration.html', {'form': form})
+
+
+            
 
 def checkout(request):
  return render(request, 'app/checkout.html')
