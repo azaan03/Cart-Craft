@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
 from .models import Costumer,Product,Order,Cart
 from .forms import CustomerRegistrationForm
 from django.contrib import messages
+from .models import User
 
 #Product
 class ProductView(View):
@@ -61,13 +62,6 @@ def laptop(request, data=None):
         laptops = Product.objects.none()
     return render(request, 'app/laptop.html', {'laptops': laptops})
 
-
-        
-    
-
-def login(request):
- return render(request, 'app/login.html')
-
 #Costumer Registration
 class CustomerRegistrationView(View):
     def get(self, request):
@@ -83,6 +77,7 @@ class CustomerRegistrationView(View):
                 return render(request, 'app/customerregistration.html', {'form': form})
             form.save()
             messages.success(request, 'Registration successful!')
+            return redirect('login')
         return render(request, 'app/customerregistration.html', {'form': form})
 
 
