@@ -17,6 +17,7 @@ class Costumer(models.Model):
     name = models.CharField(max_length=100)
     locality = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
+    mobile = models.CharField(max_length=15, blank=True, null=True)
     zipcode = models.IntegerField()
     state = models.CharField(max_length=50, choices=PAKISTAN_STATES)
 

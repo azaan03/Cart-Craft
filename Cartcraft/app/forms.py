@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.utils.translation import gettext,gettext_lazy as _
 from django.contrib.auth import password_validation
+from .models import Costumer
 #Registrion Form
 class CustomerRegistrationForm(UserCreationForm):
     password1 = forms.CharField(
@@ -95,3 +96,18 @@ class CustomSetPasswordForm(SetPasswordForm):
             'placeholder': 'Confirm new password'
         })
     )
+
+
+#profile form
+class CustomerProfileForm(forms.ModelForm):
+    class Meta:
+        model = Costumer
+        fields = ['name', 'locality', 'city', 'zipcode', 'state','mobile']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name'}),
+            'locality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Locality'}),
+            'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
+            'zipcode': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Zip Code'}),
+            'state': forms.Select(attrs={'class': 'form-control'}),
+            'mobile': forms.TextInput(attrs={'class': 'form-control',}),
+        }

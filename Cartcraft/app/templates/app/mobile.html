@@ -48,9 +48,10 @@
             <div class="card-body">
               <h5 class="card-title">{{ product.title }}</h5>
               <p class="card-text">{{ product.brand }}</p>
-              <p class="card-text text-success fw-bold">Rs.{{ product.formatted_discounted_price }}</p>
+              <p class="card-text fw-bold" style="color: #ff6200;">Rs.{{ product.formatted_discounted_price }}</p>
               <p class="card-text text-muted"><del>Rs.{{ product.formatted_selling_price }}</del></p>
-              <a href="{% url 'product-detail' product.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+              <a href="{% url 'product-detail' product.id %}" class="btn btn-sm text-white" style="background: linear-gradient(90deg, #ff6200, #ff8533);">View Details</a>
+
             </div>
           </div>
         </div>

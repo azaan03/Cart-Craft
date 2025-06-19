@@ -17,10 +17,11 @@
       <hr>
 
       <!-- Price with comma formatting -->
-      <h3 class="text-primary fw-bold">
-        Rs. {{ product.formatted_selling_price }}
-        <small class="text-muted text-decoration-line-through fs-5">Rs. {{ product.formatted_discounted_price }}</small>
+      <h3 class="fw-bold" style="color: #ff6200;">
+        Rs. {{ product.formatted_discounted_price }}
+        <small class="text-muted text-decoration-line-through fs-5">Rs. {{ product.formatted_selling_price }}</small>
       </h3>
+
       <br>
 
       <!-- Availability -->

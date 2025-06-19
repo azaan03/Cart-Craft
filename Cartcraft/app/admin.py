@@ -3,7 +3,7 @@ from .models import Costumer, Product, Cart, Order
 
 @admin.register(Costumer)
 class CostumerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'name', 'locality', 'city', 'zipcode', 'state']
+    list_display = ['id', 'user', 'name', 'locality', 'city', 'zipcode', 'state','mobile']
     search_fields = ['name', 'city', 'state']
     list_filter = ['state']
 

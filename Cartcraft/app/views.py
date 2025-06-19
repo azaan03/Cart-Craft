@@ -1,9 +1,11 @@
 from django.shortcuts import render,redirect
 from django.views import View
 from .models import Costumer,Product,Order,Cart
-from .forms import CustomerRegistrationForm
+from .forms import CustomerRegistrationForm,CustomerProfileForm
 from django.contrib import messages
 from .models import User
+from difflib import SequenceMatcher
+
 
 #Product
 class ProductView(View):
@@ -15,7 +17,6 @@ class ProductView(View):
             'laptops': laptops,
         }
         return render(request, 'app/home.html', context)
-
 #Product
 class Product_detail(View):
     def get(self,request,pk):
@@ -29,18 +30,58 @@ def add_to_cart(request):
 def buy_now(request):
  return render(request, 'app/buynow.html')
 
-def profile(request):
- return render(request, 'app/profile.html')
+class ProfileView(View):
+    def get(self, request):
+        try:
+            profile = Costumer.objects.get(user=request.user)
+            form = CustomerProfileForm(instance=profile)
+        except Costumer.DoesNotExist:
+            form = CustomerProfileForm()
+        return render(request, 'app/profile.html', {'form': form, 'active': 'btn-primary'})
+
+    def post(self, request):
+        try:
+            profile = Costumer.objects.get(user=request.user)
+            form = CustomerProfileForm(request.POST, instance=profile)
+        except Costumer.DoesNotExist:
+            form = CustomerProfileForm(request.POST)
+
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            messages.success(request, "Your profile has been updated successfully ✅")
+            return redirect('profile')
+
+        return render(request, 'app/profile.html', {'form': form, 'active': 'btn-primary'})
+    
+ #Search
+def search_view(request):
+    query = request.GET.get('q', '').strip()
+
+    if not query:
+        return redirect('home')
+
+    # Basic case-insensitive partial match
+    results = Product.objects.filter(title__icontains=query)
+    exact_match = results.filter(title__iexact=query).first()
+    if exact_match and results.count() == 1:
+        return redirect('product-detail', pk=exact_match.pk)
+
+    return render(request, 'app/search_results.html', {'query': query, 'results': results})
+
+
+
+
+
+        
 
 def address(request):
- return render(request, 'app/address.html')
+    add=Costumer.objects.get(user=request.user)
+    return render(request, 'app/address.html',{'add':add})
 
 def orders(request):
  return render(request, 'app/orders.html')
-
-def change_password(request):
- return render(request, 'app/changepassword.html')
-
 
 #Mobiles
 def mobile(request, data=None):

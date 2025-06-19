@@ -67,7 +67,7 @@
   <body>
     <!-- Top Info -->
     <div class="bg-dark text-white text-center py-2 small">
-      Free Shipping on Orders Over Rs. 2500
+      Free Shipping on Orders Over Rs. 25000
     </div>
 
     <!-- Navbar -->
@@ -102,18 +102,25 @@
 
           <!-- Centered Search Bar -->
           <div class="d-flex justify-content-center flex-grow-1">
-            <form class="d-flex align-items-center search-bar w-100">
-              <input class="form-control shadow-none" type="search" placeholder="Search products..." aria-label="Search">
-              <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-          </div>
+  <form method="get" action="{% url 'search' %}" class="d-flex align-items-center search-bar w-100">
+    <input 
+      class="form-control shadow-none" 
+      type="search" 
+      name="q" 
+      placeholder="Search products..." 
+      aria-label="Search">
+    <button type="submit">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+</div>
 
           <!-- Right Side Buttons -->
           <ul class="navbar-nav mb-2 mb-lg-0">
             {% if request.user.is_authenticated %}
               <li class="nav-item dropdown me-2">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
-                  Aazan
+                 {{ request.user.username }}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
@@ -166,15 +173,16 @@
       </div>
 
       <div class="col-md-4 mb-4">
-        <h5 class="fw-bold">Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="/" class="text-white text-decoration-none">Home</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Profile</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Orders</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Cart</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Wishlist</a></li>
-        </ul>
-      </div>
+  <h5 class="fw-bold">Quick Links</h5>
+  <ul class="list-unstyled">
+    <li><a href="{% url 'home' %}" class="text-white text-decoration-none">Home</a></li>
+    <li><a href="{% url 'profile' %}" class="text-white text-decoration-none">Profile</a></li>
+    <li><a href="{% url 'orders' %}" class="text-white text-decoration-none">Orders</a></li>
+    <li><a href="#" class="text-white text-decoration-none">Cart</a></li>
+    <li><a href="{% url 'address' %}" class="text-white text-decoration-none">Address</a></li> <!-- Replaced Wishlist -->
+  </ul>
+</div>
+
 
 
       <!-- Payments & Google Play -->
