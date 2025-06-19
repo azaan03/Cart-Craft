@@ -5,6 +5,17 @@ from .forms import CustomerRegistrationForm,CustomerProfileForm
 from django.contrib import messages
 from .models import User
 from difflib import SequenceMatcher
+from django.urls import reverse
+from django.http import JsonResponse
+from django.db.models import Sum
+
+def home(request):
+    cart_count = 0
+    if request.user.is_authenticated:
+        cart_count = Cart.objects.filter(user=request.user).aggregate(total=Sum('quantity'))['total'] or 0
+
+    return render(request, 'app/home.html', {'cart_count': cart_count})
+
 
 
 #Product
@@ -17,19 +28,95 @@ class ProductView(View):
             'laptops': laptops,
         }
         return render(request, 'app/home.html', context)
-#Product
+    
+#Product_Detail
 class Product_detail(View):
     def get(self,request,pk):
         product=Product.objects.get(pk=pk) 
         return render(request,'app/productdetail.html',{'product':product})    
 
-
+#add to Cart
 def add_to_cart(request):
- return render(request, 'app/addtocart.html')
+    user=request.user
+    product_id=request.GET.get('product_id')
+    product=Product.objects.get(id=product_id)
+    Cart(user=user,product=product).save()
+    cart_url = reverse('cart')  # Replace 'showcart' with your actual URL name
+    messages.success(request, f"Item added to cart.")
+    return redirect('home')
+
+#show Cart
+def cart(request):
+    if request.user.is_authenticated:
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        if not cart.exists():
+            return render(request, 'app/empty_cart.html')
+
+        total_amount = 0
+        for item in cart:
+            total_amount += item.quantity * item.product.discounted_price
+
+        # Free shipping over Rs. 20,000
+        shipping_cost = 0 if total_amount > 20000 else 350
+        grand_total = total_amount + shipping_cost
+
+        return render(request, 'app/addtocart.html', {
+            'cart': cart,
+            'total_amount': total_amount,
+            'shipping_cost': shipping_cost,
+            'grand_total': grand_total
+        })
+    
+#Update Item
+def update_cart_quantity(request):
+    if request.method == 'GET':
+        cart_id = request.GET.get('cart_id')
+        action = request.GET.get('action')
+        cart = Cart.objects.get(id=cart_id, user=request.user)
+
+        if action == 'plus':
+            cart.quantity += 1
+        elif action == 'minus' and cart.quantity > 1:
+            cart.quantity -= 1
+        cart.save()
+
+        total = sum(c.quantity * c.product.discounted_price for c in Cart.objects.filter(user=request.user))
+        shipping = 0 if total > 20000 else 350
+        grand_total = total + shipping
+
+        return JsonResponse({
+            'quantity': cart.quantity,
+            'total': total,
+            'shipping': shipping,
+            'grand_total': grand_total
+        })
+
+#Remove Item
+def remove_cart_item(request):
+    if request.method == 'GET':
+        cart_id = request.GET.get('cart_id')
+        cart = Cart.objects.get(id=cart_id, user=request.user)
+        cart.delete()
+
+        # Update totals
+        total = sum(c.quantity * c.product.discounted_price for c in Cart.objects.filter(user=request.user))
+        shipping = 0 if total > 20000 else 350
+        grand_total = total + shipping
+
+        return JsonResponse({
+            'status': 'success',
+            'total': total,
+            'shipping': shipping,
+            'grand_total': grand_total
+        })
+
+
 
 def buy_now(request):
  return render(request, 'app/buynow.html')
 
+#Profile_View
 class ProfileView(View):
     def get(self, request):
         try:
@@ -55,7 +142,7 @@ class ProfileView(View):
 
         return render(request, 'app/profile.html', {'form': form, 'active': 'btn-primary'})
     
- #Search
+#Search
 def search_view(request):
     query = request.GET.get('q', '').strip()
 
@@ -70,12 +157,7 @@ def search_view(request):
 
     return render(request, 'app/search_results.html', {'query': query, 'results': results})
 
-
-
-
-
-        
-
+#Address
 def address(request):
     add=Costumer.objects.get(user=request.user)
     return render(request, 'app/address.html',{'add':add})

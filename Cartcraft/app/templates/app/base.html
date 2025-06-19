@@ -67,7 +67,7 @@
   <body>
     <!-- Top Info -->
     <div class="bg-dark text-white text-center py-2 small">
-      Free Shipping on Orders Over Rs. 25000
+      Free Shipping on Orders Over Rs. 20000
     </div>
 
     <!-- Navbar -->
@@ -75,7 +75,7 @@
       <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="/">
           <i class="fas fa-shopping-cart me-2" style="font-size: 1.5rem;"></i>
-          <strong>Cartcraft</strong>
+          <strong>CartCraft</strong>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
           <span class="navbar-toggler-icon"></span>
@@ -137,11 +137,12 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="{% url 'add-to-cart' %}" class="btn btn-glow position-relative">
+                <a href="{% url 'cart' %}" class="btn btn-glow position-relative">
                   <i class="fas fa-shopping-cart"></i>
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">4</span>
                 </a>
               </li>
+
+
             {% else %}
               <li class="nav-item"><a href="{% url 'login' %}" class="btn btn-glow mx-1">Login</a></li>
               <li class="nav-item"><a href="{% url 'customerregistration' %}" class="btn btn-glow mx-1">Register</a></li>
@@ -224,4 +225,58 @@
     <script src="{% static 'app/js/all.min.js' %}"></script>
     <script src="{% static 'app/js/myscript.js' %}"></script>
   </body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  document.querySelectorAll('.plus-cart, .minus-cart').forEach(button => {
+    button.addEventListener('click', function () {
+      const cartId = this.getAttribute('data-cart-id');
+      const action = this.classList.contains('plus-cart') ? 'plus' : 'minus';
+
+      fetch(`/update-cart-quantity/?cart_id=${cartId}&action=${action}`)
+        .then(res => res.json())
+        .then(data => {
+          // Update quantity
+          document.getElementById(`quantity-${cartId}`).innerText = data.quantity;
+
+          // Update totals
+          document.getElementById('amount').innerText = data.total.toLocaleString('en-IN');
+          document.getElementById('shipping').innerText = data.shipping === 0 ? 'Free' : `Rs. ${data.shipping.toLocaleString('en-IN')}`;
+          document.getElementById('total').innerText = data.grand_total.toLocaleString('en-IN');
+        });
+    });
+  });
+</script>
+<script>
+  document.querySelectorAll('.remove-cart').forEach(button => {
+    button.addEventListener('click', function () {
+      const cartId = this.getAttribute('data-cart-id');
+
+      fetch(`/remove-cart-item/?cart_id=${cartId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            // Remove the cart item's row from DOM
+            const row = this.closest('.row');
+            row.remove();
+
+            // Update totals
+            document.getElementById('amount').innerText = data.total.toLocaleString('en-IN');
+            document.getElementById('shipping').innerText = data.shipping === 0 ? 'Free' : `Rs. ${data.shipping.toLocaleString('en-IN')}`;
+            document.getElementById('total').innerText = data.grand_total.toLocaleString('en-IN');
+
+            // Optionally show empty cart message if cart becomes empty
+            if (data.total === 0) {
+              location.reload();  // or redirect to empty cart page
+            }
+          }
+        });
+    });
+  });
+</script>
+
+
+
+
+
 </html>

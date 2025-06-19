@@ -52,9 +52,15 @@
         {% endif %}
       </ul>
       <br>
+      <form action="{% url 'add-to-cart' %}" class="d-inline">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
+      </form>
+
+
+
 
       <!-- Buttons -->
-      <a href="{% url 'add-to-cart' %}" class="btn btn-primary shadow px-5 py-2">Add to Cart</a>
       <a href="{% url 'buy-now' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
 
       <!-- Offers (Pakistan specific) -->
