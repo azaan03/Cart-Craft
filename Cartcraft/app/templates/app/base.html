@@ -165,12 +165,13 @@
       <div class="col-md-4 mb-4">
         <h5 class="fw-bold">About CartCraft</h5>
         <ul class="list-unstyled">
-          <li>About Us</li>
-          <li>FAQs</li>
-          <li>Contact Us</li>
-          <li>Careers</li>
-          <li>Terms & Conditions</li>
-        </ul>
+        <li><a href="{% url 'about' %}" class="text-decoration-none text-white">About Us</a></li>
+        <li><a href="{% url 'faqs' %}" class="text-decoration-none text-white">FAQs</a></li>
+        <li><a href="https://wa.me/923258680608" target="_blank" class="text-decoration-none text-white">Contact Us</a></li>
+        <li><a href="{% url 'careers' %}" class="text-decoration-none text-white">Careers</a></li>
+        <li><a href="{% url 'terms' %}" class="text-decoration-none text-white">Terms &amp; Conditions</a></li>
+      </ul>
+
       </div>
 
       <div class="col-md-4 mb-4">
@@ -179,7 +180,7 @@
     <li><a href="{% url 'home' %}" class="text-white text-decoration-none">Home</a></li>
     <li><a href="{% url 'profile' %}" class="text-white text-decoration-none">Profile</a></li>
     <li><a href="{% url 'orders' %}" class="text-white text-decoration-none">Orders</a></li>
-    <li><a href="#" class="text-white text-decoration-none">Cart</a></li>
+    <li><a href="{% url 'cart' %}" class="text-white text-decoration-none">Cart</a></li>
     <li><a href="{% url 'address' %}" class="text-white text-decoration-none">Address</a></li> <!-- Replaced Wishlist -->
   </ul>
 </div>
@@ -207,11 +208,11 @@
         <small class="text-muted">© 2025 CartCraft. Designed by <strong>Axaan Farooqi</strong>.</small>
       </div>
       <div class="col-md-6 text-center text-md-end">
-        <a href="https://www.youtube.com/" class="text-white me-3"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/az_an_03/" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-        <a href="#" class="text-white me-3"><i class="fab fa-tiktok"></i></a>
-        <a href="https://www.linkedin.com/feed/" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://www.youtube.com/@axaanfarooqi01" target="_blank" class="text-white me-3"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com/" target="_blank" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/az_an_03/" target="_blank" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@azaanfarooqi505" target="_blank" class="text-white me-3" ><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.linkedin.com/feed/" target="_blank" class="text-white"><i class="fab fa-linkedin-in"></i></a>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MaxLengthValidator, MinValueValidator
+import uuid
 
 PAKISTAN_STATES = (
     ('Punjab', 'Punjab'),
@@ -85,6 +86,10 @@ STATUS_CHOICES = (
     ('Cancel', 'Cancel'),
 )
 
+def generate_order_id():
+    return str(uuid.uuid4()).split('-')[0].upper()
+
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -92,6 +97,8 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     order_date = models.DateTimeField(auto_now_add=True)
     order_status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending')
+    order_id = models.CharField(max_length=20, default=generate_order_id, unique=True, blank=True)
+
 
     def __str__(self):
         return f"Order {self.id} - {self.order_status}"

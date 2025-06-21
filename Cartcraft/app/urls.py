@@ -10,10 +10,9 @@ urlpatterns = [
     path('product-detail/<int:pk>', views.Product_detail.as_view(), name='product-detail'),
     path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
     path('cart/', views.cart, name='cart'),
-    path('buy/', views.buy_now, name='buy-now'),
+    path('buy-now/', views.buy_now, name='buy-now'),
     path('profile/',views.ProfileView.as_view(), name='profile'),
     path('address/', views.address, name='address'),
-    path('orders/', views.orders, name='orders'),
     #password change URL
     path('changepassword/', auth_views.PasswordChangeView.as_view(
         template_name='app/changepassword.html',
@@ -49,6 +48,14 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('update-cart-quantity/', views.update_cart_quantity, name='update_cart_quantity'),
     path('remove-cart-item/', views.remove_cart_item, name='remove_cart_item'),
+    path('about/', views.about, name='about'),
+    path('faqs/', views.faqs, name='faqs'),
+    path('careers/', views.careers, name='careers'),
+    path('terms/', views.terms, name='terms'),
+    path("orders/", views.orders, name="orders"),
+    path('paymentdone/', views.payment_done, name='payment_done'),
+
+
 
 
 
